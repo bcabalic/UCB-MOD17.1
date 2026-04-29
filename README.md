@@ -10,18 +10,17 @@ A Portuguese bank conducted 17 phone-based marketing campaigns between May 2008 
 
 This project builds and compares predictive models to identify which clients are most likely to subscribe, helping the bank focus its efforts and improve campaign ROI.
 
-**Primary metric: ROC-AUC** — simple accuracy is misleading given the class imbalance (~89% / ~11%). ROC-AUC measures how well a model ranks likely subscribers above non-subscribers, which directly maps to prioritizing a call list.
+**Primary metric: ROC-AUC** — chosen over raw accuracy because a model that always predicts "no" achieves 89% accuracy while catching zero subscribers. ROC-AUC measures how well the model ranks likely subscribers above non-subscribers, which directly shows a priority call list
 
 ---
 
 ## Dataset
 
-**Source:** [UCI Machine Learning Repository — Bank Marketing Dataset](https://archive.ics.uci.edu/ml/datasets/bank+marketing)
-
-- 41,188 client contacts across 17 campaigns
-- 20 input features (client info, campaign contact details, economic indicators)
-- Binary target: did the client subscribe to a term deposit? (`yes` / `no`)
-- `duration` (call length) is **excluded** from all models 
+- **Source:** [UCI Machine Learning Repository — Bank Marketing Dataset](https://archive.ics.uci.edu/ml/datasets/Bank+Marketing)
+- **File:** `bank-additional-full.csv`
+- **Size:** 41,188 client contacts × 21 features
+- **Campaigns covered:** 17 phone-based campaigns, May 2008 – November 2010
+- **Target variable:** `y` — whether the client subscribed to a term deposit (`yes` / `no`)
 
 ---
 
@@ -68,15 +67,15 @@ Build and evaluate a baseline logistic regression model. Interpret top coefficie
 ### 10. Default Model Comparison
 Compare all four classifiers at default settings across accuracy, ROC-AUC, F1, and training time.
 
-| Model | Test ROC-AUC | Note |
+| Model | Test ROC-AUC | Notes |
 |---|---|---|
-| Logistic Regression | ~0.79 | Fast and interpretable |
-| SVM (LinearSVC) | ~0.80 | Strong generalization |
-| K-Nearest Neighbors | ~0.76 | Slower at scale |
-| Decision Tree | ~0.74 | Overfits without tuning |
+| **Logistic Regression** | **~0.80** | Best balance of performance, speed, and interpretability |
+| SVM (LinearSVC) | ~0.80 | Comparable performance; fast via linear kernel |
+| Decision Tree | ~0.78 | Largest gain from tuning; overfits heavily with defaults |
+| K-Nearest Neighbors | ~0.77 | Competitive but impractical at scale |
 
 ### 11. Hyperparameter Tuning
-`GridSearchCV` with 5-fold stratified cross-validation improves all four models. Tuning is scored on ROC-AUC to align with the business objective.
+`GridSearchCV` with 3-fold stratified cross-validation improves all four models. Tuning is scored on ROC-AUC to align with the business objective.
 
 ---
 
@@ -86,5 +85,24 @@ Compare all four classifiers at default settings across accuracy, ROC-AUC, F1, a
 - **Students and retirees** have the highest subscription rates by job category (~30–35%)
 - **March, September, and October** yield 2–3x higher subscription rates than May (the highest-volume month)
 - **Recommended model: Logistic Regression (tuned)** — achieves top ROC-AUC (~0.80), trains in seconds, and produces interpretable coefficients for business stakeholders
+
+---
+## Requirements
+
+```
+pandas
+numpy
+matplotlib
+seaborn
+scikit-learn
+```
+## Usage
+
+1. Download `bank-additional-full.csv` from the [UCI repository](https://archive.ics.uci.edu/ml/datasets/Bank+Marketing) and place it in the same directory as the notebook.
+2. If running on **Google Colab**, upload the CSV file and ensure the path in the notebook matches:
+   ```python
+   bank_df = pd.read_csv("/content/bank-additional-full.csv", sep=";")
+   ```
+3. Run all cells in order. Note that **Problem 11 (grid search) may take 5+ minutes** to execute depending on your hardware.
 
 ---

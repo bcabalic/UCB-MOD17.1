@@ -27,7 +27,7 @@ This project builds and compares predictive models to identify which clients are
 ## Project Structure
 
 ```
-├── MOD17_Bank_marketing_practical_app.ipynb   # Full analysis notebook
+├── MOD17_Bank_marketing_practical_app_finalfinal.ipynb   # Full analysis notebook
 ├── bank-additional-full.csv                   # Dataset (download from UCI)
 └── README.md
 ```
